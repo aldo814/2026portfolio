@@ -1,0 +1,62 @@
+//// COLOR
+$bg: #000;
+$text: #ffffff;
+$gray: #999;
+
+//// FONT
+$font-main: 'Pretendard', sans-serif;
+$font-title: 'Bricolage', sans-serif;
+
+//// FONT WEIGHT
+$fw-light: 300;
+$fw-regular: 400;
+$fw-medium: 500;
+
+//// LINE HEIGHT
+$lh-base: 1.5;
+$lh-title: 1.2;
+
+//// LETTER SPACING
+$ls-tight: -0.02em;
+$ls-normal: 0;
+$ls-wide: 0.02em;
+
+//// LAYOUT
+$inner: 1600px;
+$sub-inner: 1400px;
+$section-padding: 7.5rem 0;
+$section-padding-m: 4.375rem 0;
+
+//// SPACING
+$gap-sm: .5rem;
+$gap-md: 1rem;
+$gap-lg: 2rem;
+
+//// font size
+$font-body: 1rem;      
+$font-desc: 1.125rem;
+$font-title: 12.5rem;  
+$font-hero: 6.25rem;      
+
+.inner {
+  max-width: $inner;
+  width:100%;
+  padding: 0 20px;
+  margin: 0 auto;
+}
+.sub-inner{
+  max-width: $sub-inner;
+  width: 100%;
+  padding: 0 30px;
+  margin: 0 auto;
+}
+
+/* 브레이크포인트 변수 */
+
+$smpc:1400px ;$tablet: 1024px; $mobile: 768px; $mini: 480px;
+
+/* 미디어쿼리 믹스인 */
+@mixin smpc { @media (max-width: #{$smpc}) { @content; } }
+@mixin tablet { @media (max-width: #{$tablet}) { @content; } }
+@mixin mobile { @media (max-width: #{$mobile}) { @content; } }
+@mixin mini { @media (max-width: #{$mini}) { @content; } }

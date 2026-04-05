@@ -1,0 +1,164 @@
+.about{
+  margin: $section-padding;
+  overflow: hidden;
+  @include mobile{
+    margin: $section-padding-m;
+  }
+  & .inner{
+    display: flex;
+    align-items: center;
+    gap: 6.25rem;
+
+    @include smpc{
+      gap: 3.125rem;
+    }
+
+    @include tablet{
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+  & .about__img{
+    width: 46.56%;
+    position: relative;
+    & img{
+      width: 100%;
+      display: block;
+    }
+
+    @include tablet{
+      width: 100%;
+    }
+  
+  }
+  & .about__cont{
+    flex: 1 1;
+    & .about__title{
+      font-family: 'Bricolage Grotesque';
+      font-size: 7.5rem;  
+      font-weight: 900;
+      line-height: 80%; 
+      letter-spacing: -0.625rem;
+      margin-bottom: 3.125rem;
+      span{
+        font-weight: 300;
+      }
+      @include tablet{
+        font-size:5rem;
+        letter-spacing: -0.3125rem;
+      }
+      @include mobile{
+        font-size:2.5rem;
+        letter-spacing: -0.1875rem;
+        margin-bottom: 1.5625rem;
+      }
+      }
+    & .about__profile-box{
+      position: relative;
+      padding-bottom: 2.5rem;
+      margin-bottom: 2.5rem;
+
+      @include tablet{
+        padding-bottom: 1.875rem;
+        margin-bottom: 1.875rem;
+      }
+      &::after{
+      content: '';
+      display: block;
+      width: 200%;
+      height: 1px;
+      background: #000;
+      position: absolute; 
+      left: 0;
+      bottom: 0;
+     }
+      .about__capability-list{
+        display: flex;
+       & li {
+          color: #999;
+          font-size: 1.375rem;
+          font-weight: 300;
+          letter-spacing: -0.125rem;
+          display: flex;
+          align-items: center;
+          @include tablet{
+            font-size: 1.125rem;
+            letter-spacing: -0.0625rem;
+          }
+          @include mobile{
+            font-size: .9375rem;
+            letter-spacing: -0.0625rem;
+          }
+
+        &::after{
+          content: '·';
+          margin: 0 .3125rem;
+        }
+        }
+      }
+    }
+    & .about__name{
+      font-size: 2.5rem;
+      font-weight: 400;
+      letter-spacing: -0.125rem;
+      margin: 1.6875rem 0 2.75rem 0;
+      @include tablet{
+        font-size: 1.5rem;
+        margin: .9375rem 0 1.25rem 0;
+        letter-spacing: -0.0625rem;
+      }
+    }
+    & .about__desc{
+      color: #555;
+      font-size: 1.25rem;
+      font-weight: 300;
+      line-height: 160%;
+      letter-spacing: -0.03125rem;
+      word-break: keep-all;
+      @include tablet{
+        font-size: .9375rem;
+      }
+    }
+    & .about__career-box{
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+
+      
+      & .about__subtitle{
+        color: #000;
+        font-family: 'Bricolage';
+        font-size: 1.5rem;
+        font-weight: 500;
+        letter-spacing: -0.03125rem;
+
+      @include tablet{
+        font-size: 1.25rem;
+      }
+      }
+      & .about__career-list{
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        @include tablet{
+          gap: .625rem;
+        }
+        & li{
+          display: flex;
+          justify-content:space-between;
+          align-items: center;
+          font-size: 1.125rem;
+          font-weight: 300;
+
+      @include tablet{
+        font-size: .9375rem;
+      }
+        }
+        & .period{
+          color: #999;
+          text-align: right;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,204 @@
+.work {
+  margin: $section-padding;
+  @include mobile{
+    margin: $section-padding-m;
+  }
+  .inner {
+    max-width: 1600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .work__header{
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    z-index: 99;
+
+    .work__title {
+      font-family: "Bricolage Grotesque";
+      font-size: clamp(4rem, 8vw, 7.5rem); 
+      font-weight: 800;
+      line-height: 0.9;
+      letter-spacing: -0.05em;
+      span { font-weight: 300; }
+    }
+  
+    .work__desc {
+      align-self: flex-end;
+      display: flex;
+      align-items: center;
+      text-align: right;
+      gap: 50px;
+      font-size: 1rem;
+      line-height: 1.4;
+
+      @include tablet{
+        display: none;
+      }
+      p { margin-bottom: 10px; }
+      span { font-size: 0.8rem; text-transform: uppercase; color: #888; }
+    }
+  }
+
+  
+
+  .work__hero {
+    margin-top: -100px;
+    width: 100%;
+    height: 60vh;
+    background: #dedede;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    @include tablet{
+      height: 50vh;
+      margin-top: -50px;
+    }
+
+    #glCanvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+      inset: 0;
+      height: 100%;
+      display: block;
+    }
+    
+    video{
+      display: none;
+    }
+  }
+
+  .work__slider {
+    overflow: hidden;
+    .work__slide {
+      height: auto;
+      a{display: block;}
+      a:hover{
+        .work__img{
+          filter: grayscale(0);
+          img {
+            transform: scale(1.05); 
+          }
+        }
+    }
+      .work__img{
+        aspect-ratio: 1 /0.83;
+        position: relative;
+        overflow: hidden;
+        z-index: 2;
+        filter: grayscale(100%);
+        will-change: filter;
+        transition: all .5s cubic-bezier(0.075, 0.82, 0.165, 1);
+
+        img{
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.6s cubic-bezier(0.075, 0.82, 0.165, 1);
+        }
+        
+      }
+      
+      .work__info{
+        padding:3.125rem  1.875rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-right: 1px solid #eee;
+        overflow: hidden;
+        @include tablet{
+          padding: 1.875rem 1.25rem;
+          flex-direction: column;
+          gap: .9375rem;
+          align-items: flex-start;
+        }
+
+        .work__id{
+          font-size: .875rem;
+          letter-spacing: -1px;
+        }
+
+        .work__name
+        {
+          font-size: 1.125rem;
+          font-weight: 300;
+          text-transform: capitalize;
+        }
+      }
+    }
+  }
+
+  .work__media {
+    width: 100%;
+    height: 60vh;
+    background: #222;
+    position: relative;
+    overflow: hidden;
+    @include tablet{
+      height: 50vh;
+    }
+    .work__media-inner {
+      position: absolute; 
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5; 
+  pointer-events: none;
+  background-color: #000000; 
+  canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+}
+  }
+
+  .work__button {
+    width: 100%;
+    display: flex;
+    align-self: center;
+    background:  #000;
+    transition: all 0.3s;
+    padding: 5px 0;
+    transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+    span {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      text-align: center;
+      font-family: 'Bricolage';
+      white-space: nowrap;
+      font-size: 7.5rem;
+      font-weight: 800;
+      border-radius: 30px; 
+      padding: 5rem 3rem;
+      background: #fff;
+      color: #000;
+      letter-spacing: -8px;
+      transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+      @include tablet{
+        padding: 3rem 2rem;
+        font-size: 4rem;
+        letter-spacing: -0.4rem;
+      }
+      @include tablet{
+        font-size: 3rem;
+        letter-spacing: -0.1875rem;
+      }
+    }
+
+    &:hover {
+      background: #fff;
+      span {background: #000; color: #fff; }
+    }
+  }
+}
+
+

@@ -1,0 +1,189 @@
+.contact{
+  padding: $section-padding;
+  @include mobile{
+    padding: $section-padding-m;
+  }
+  .contact__title{
+    font-family: "Bricolage Grotesque";
+    font-size: 12.5rem;
+    font-weight: 800;
+    letter-spacing: -0.9375rem;
+    cursor: default;
+    margin-bottom:2.875rem ;
+    @include tablet{
+      font-size: 4.375rem;
+      letter-spacing: -0.1875rem;
+      margin-bottom: 1.875rem;
+    }
+    @include mobile{
+      font-size: 2.5rem;
+      margin-bottom: 1.25rem;
+    }
+    }
+  .contact__wrap{
+    display: flex;
+    gap: 6.25rem;
+    align-items: center;
+    @include tablet{
+      gap: 2.5rem;
+      flex-direction: column;
+      align-items: normal;
+    }
+    > div{
+      flex: 1 1;
+    }
+    .contact__cont{
+      .contact__heading{
+        font-family: "Sora";
+        font-size: 4.375rem;
+        font-weight: 800;
+        line-height: 100%; 
+        letter-spacing: -0.3125rem;
+        cursor: default;
+        @include tablet{
+          font-size: 3.125rem;
+        }
+        @include mobile{
+          font-size: 1.875rem;
+          letter-spacing: -0.125rem;
+        }
+        span {
+          color: #fff;
+          text-shadow:
+            -1px -1px 0 #000,
+             1px -1px 0 #000,
+            -1px  1px 0 #000,
+             1px  1px 0 #000;
+        }
+      }
+      .contact__desc{
+        cursor: default;
+        color: #71717A;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 150%;
+        margin: 1.25rem 0 2.5rem 0;
+
+        @include tablet{
+          margin: .9375rem 0 1.25rem 0;
+        }
+      }
+      .contact__email{
+        color: var(--Primary-Black, #000);
+        font-family: "Bricolage Grotesque";
+        font-size: 1.75rem;
+        font-weight: 600;
+        line-height: 2rem; 
+        letter-spacing: -0.035rem;
+        transition: all 0.5s;
+        display: block;
+
+        @include tablet{
+          font-size: 1.25rem;
+        }
+        &:hover,
+        &:focus,
+        &:active{
+          transform: translateY(-5px);
+        }
+      }
+    }
+    .contact__form-area{
+      .contact__status {
+        margin-top: 1.25rem;
+        font-size: .9375rem;
+        font-weight: 500;
+        letter-spacing: -0.0313rem;
+        min-height: 20px; 
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        line-height:150%;
+        * {
+        opacity: 0;
+        }
+    
+        .loading,
+        .success,
+        .error {
+          opacity: 1;
+          transform: translateY(0);
+          padding:1.25rem 1.875rem;
+          border:1px solid #000;
+          border-left: 5px solid #000;
+        }
+    
+    
+      }
+      .contact__form__list{
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+
+        @include mobile{
+          gap: .9375rem;
+        }
+        .contact__input{
+          border-radius: 0.25rem;
+          border: 1.4px solid var(--Primary-Black, #000);
+          padding: 1rem 1.5rem;
+          height: 3.5rem;
+          font-weight: 400;
+          line-height: 1.25rem; 
+          letter-spacing: -0.02rem;
+          font-size: .9375rem;
+          width: 100%;
+          color: #000;
+          &::placeholder{
+            color: #777;
+          }
+        }
+
+        .contact__textarea{
+          border-radius: 0.25rem;
+          border: 1.4px solid var(--Primary-Black, #000);
+          padding: 1rem 1.5rem;
+          height: 9.375rem;
+          resize: none;
+          font-weight: 400;
+          line-height: 1.25rem; 
+          letter-spacing: -0.02rem;
+          font-size: .9375rem;
+          width: 100%;
+          color: #000;
+          &::placeholder{
+            color: #777;
+          }
+        }
+      }
+      .contact__bottom{
+        margin-top: 1.25rem;
+        display: flex;
+        gap: .9375rem;
+       .contact__submit {
+          color: #fff;;
+          font-size: 1rem;
+          font-weight: 600;
+          letter-spacing: 0.025rem;
+          padding: 1rem 2.5rem;
+          background: #000;
+          border-radius: 4px;
+        }
+
+        .contact__links{
+          display: flex;
+          gap: .9375rem;
+          a{
+            border: 1px solid #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-radius: 4px;
+            width: 51px;
+          }
+        }
+      }
+    }
+  }
+
+}
