@@ -1,28 +1,37 @@
-name: Deploy to Server
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ "main" ] # main 브랜치에 push될 때 실행
+    branches: ["main"]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
-  build-and-deploy:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build project
-        run: npm run build
-
-      - name: Deploy to Server (SCP)
-        uses: appleboy/scp-action@master
+      - name: Set up Node
+        uses: actions/setup-node@v4
         with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          password: ${{ secrets.SERVER_PASSWORD }}
-          source: "dist/*" # Vite 빌드 결과물 폴더
-          target: "/var/www/html" # 서버 내 배포 경로
-          strip_components: 1 # dist 폴더 자체는 제외하고 내용물만 복사
+          node-version: 20
+      - name: Install and Build
+        run: |
+          npm install
+          npm run build
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
