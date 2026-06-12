@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
 function Header() {
@@ -6,21 +6,29 @@ function Header() {
   const location = useLocation();
   const [active, setActive] = useState('');
   const [scrolled, setScrolled] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // 모바일 메뉴 상태
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const codeBtnRef = useRef(null);
 
+  const toggleMenu = useCallback(() => {
+    setIsMenuOpen((prev) => !prev);
+  }, []);
+
   const handleNavClick = (e, id) => {
-    e.preventDefault();
-    setIsMenuOpen(false); // 메뉴 클릭 시 닫기
+    if (e) e.preventDefault();
+    setIsMenuOpen(false);
+
     if (location.pathname === "/") {
       const target = document.getElementById(id);
-      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (target) {
+        setTimeout(() => {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
     } else {
       navigate(`/#${id}`);
     }
   };
 
-  // 마그네틱 효과 (PC 전용)
   const handleMouseMove = (e) => {
     if (window.innerWidth < 1024) return;
     const btn = codeBtnRef.current;
@@ -38,18 +46,23 @@ function Header() {
   };
 
   useEffect(() => {
+    setIsMenuOpen(false);
+
     if (location.pathname !== "/") setActive('');
+
     if (location.pathname === "/" && location.hash) {
       const id = location.hash.replace('#', '');
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         const target = document.getElementById(id);
         if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
+      }, 300);
+      return () => clearTimeout(timer);
     }
 
     const handleScroll = () => {
       const scrollY = window.scrollY;
       setScrolled(scrollY > 300);
+
       if (location.pathname === "/") {
         const sections = document.querySelectorAll('section');
         sections.forEach((section) => {
@@ -63,7 +76,15 @@ function Header() {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [location]);
+  }, [location.pathname, location.hash]);
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isMenuOpen]);
 
   return (
     <header className={`header ${scrolled ? 'active' : ''} ${isMenuOpen ? 'menu-open' : ''}`}>
@@ -80,7 +101,14 @@ function Header() {
           <a href="#skills" onClick={(e) => handleNavClick(e, 'skills')} className={active === 'skills' ? 'active' : ''}>Skills</a>
           <a href="#work" onClick={(e) => handleNavClick(e, 'work')} className={active === 'work' ? 'active' : ''}>Work</a>
           <a href="#contact" onClick={(e) => handleNavClick(e, 'contact')} className={active === 'contact' ? 'active' : ''}>Contact</a>
-          <Link to="/AllWork" className={`code ${location.pathname === '/AllWork' ? 'active' : ''}`} ref={codeBtnRef} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
+          <Link
+            to="/AllWork"
+            className={`code ${location.pathname === '/AllWork' ? 'active' : ''}`}
+            ref={codeBtnRef}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            onClick={() => sessionStorage.removeItem("scrollY")}
+          >
             <span className="tag">&lt;</span><span className="name">all-work</span><span className="tag">/&gt;</span>
           </Link>
         </nav>
@@ -88,8 +116,9 @@ function Header() {
         {/* 모바일 햄버거 버튼 */}
         <button
           className={`m-menu-btn ${isMenuOpen ? 'open' : ''}`}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >  <p>메뉴 열기</p>
+          onClick={toggleMenu}
+        >
+          <p>메뉴 열기</p>
           <div className="burger-icon">
             <span></span><span></span><span></span>
           </div>
@@ -108,7 +137,13 @@ function Header() {
           <a href="#work" onClick={(e) => handleNavClick(e, 'work')} className="m-nav-item">Works <span>(03)</span></a>
           <a href="#contact" onClick={(e) => handleNavClick(e, 'contact')} className="m-nav-item">Contact <span>(04)</span></a>
           <div className="m-nav-divider"></div>
-          <Link to="/AllWork" onClick={() => setIsMenuOpen(false)} className="m-nav-item big">All-Work</Link>
+          <Link
+            to="/AllWork"
+            onClick={() => { setIsMenuOpen(false); sessionStorage.removeItem("scrollY"); }}
+            className="m-nav-item big"
+          >
+            All-Work
+          </Link>
         </nav>
       </div>
     </header>

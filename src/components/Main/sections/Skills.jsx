@@ -2,13 +2,12 @@ import React, { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-// GSAP 플러그인 등록
 gsap.registerPlugin(ScrollTrigger);
 
 function Skills() {
-  const sectionRef = useRef(null); // 섹션 전체 Ref
-  const titleRef = useRef(null); // 타이틀 Ref
-  const itemsRef = useRef([]); // 스킬 아이템들 Ref 배열
+  const sectionRef = useRef(null);
+  const titleRef = useRef(null);
+  const itemsRef = useRef([]);
 
   const skillsRow1 = [
     { name: 'Photoshop', icon: 'ico_ps.svg', level: 90, desc: '디자인 시안 제작 및 웹용 이미지 최적화, 합성 숙련' },
@@ -28,70 +27,80 @@ function Skills() {
     { name: 'Scss', icon: 'ico_sass.svg', level: 80, desc: '변수와 믹스인을 활용한 체계적이고 효율적인 스타일 관리' },
   ];
 
+  const allSkills = [...skillsRow1, ...skillsRow2];
+
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
 
-      // 🌟 타이틀 & 아이템 순차 등장 타임라인
+      // 타이틀 & 아이템 등장 애니메이션
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 70%", // 섹션이 뷰포트 70% 위치에 올 때 시작
+          start: "top 70%",
           toggleActions: "play none none none"
         }
       });
 
-      // 1. 초기 상태 세팅
       gsap.set(titleRef.current, { y: 50, opacity: 0, filter: 'blur(10px)' });
       gsap.set(itemsRef.current, { y: 60, opacity: 0, filter: 'blur(10px)' });
 
-      // 2. 애니메이션 시퀀스 실행
       tl
-        // [1단계: 타이틀] 흐릿함이 사라지며 위로 등장
         .to(titleRef.current, {
           y: 0, opacity: 1, filter: 'blur(0px)', duration: 1, ease: "power4.out"
         })
-
-        // [2단계: 스킬 아이템] 타이틀 등장 후 1개씩 순차적으로(Stagger) 등장
         .to(itemsRef.current, {
-          y: 0,
-          opacity: 1,
-          filter: 'blur(0px)',
-          duration: 0.8,
-          stagger: {
-            each: 0.1, // 각 아이템 간의 간격 (초 단위, 이전 0.08에서 늘려 한개씩 느낌 강조)
-            from: "start" // 처음부터 순서대로
-          },
+          y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.8,
+          stagger: { each: 0.1, from: "start" },
           ease: "expo.out"
-        }, '-=0.5'); // 타이틀 애니메이션이 끝나기 0.5초 전에 아이템 등장 시작
+        }, '-=0.5');
+
+      // 모바일 전용 — 스크롤 시 숫자 카운트업 자동 실행
+      if (window.innerWidth <= 768) {
+        itemsRef.current.forEach((item, index) => {
+          if (!item) return;
+          const num = item.querySelector('.skills__num');
+          const targetLevel = allSkills[index]?.level;
+          if (!num || !targetLevel) return;
+
+          ScrollTrigger.create({
+            trigger: item,
+            start: "top 85%",
+            once: true, // 한 번만 실행
+            onEnter: () => {
+              const count = { val: 0 };
+              gsap.to(count, {
+                val: targetLevel,
+                duration: 1.2,
+                ease: "power2.out",
+                onUpdate: () => { num.innerText = Math.floor(count.val); }
+              });
+            }
+          });
+        });
+      }
 
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
-  // 🌟 마우스 호버 (기존 고급 인터랙션 유지)
+  // PC hover 인터랙션
   const onHoverSkill = (e, targetLevel) => {
+    if (window.innerWidth <= 768) return; // 모바일에서는 hover 비활성화
     const item = e.currentTarget;
     const border = item.querySelector('.skills__border-path');
     const num = item.querySelector('.skills__num');
     const desc = item.querySelector('.skills__desc');
-
     const totalLength = border.getTotalLength();
     const drawLength = (targetLevel / 100) * totalLength;
 
     gsap.killTweensOf(border);
     gsap.set(border, { strokeDasharray: totalLength, strokeDashoffset: totalLength });
-    gsap.to(border, {
-      strokeDashoffset: totalLength - drawLength,
-      duration: 1.5,
-      ease: "power3.inOut"
-    });
+    gsap.to(border, { strokeDashoffset: totalLength - drawLength, duration: 1.5, ease: "power3.inOut" });
 
     const count = { val: 0 };
     gsap.to(count, {
-      val: targetLevel,
-      duration: 1.2,
-      ease: "power2.out",
+      val: targetLevel, duration: 1.2, ease: "power2.out",
       onUpdate: () => { num.innerText = Math.floor(count.val); }
     });
 
@@ -99,76 +108,54 @@ function Skills() {
   };
 
   const onLeaveSkill = (e) => {
+    if (window.innerWidth <= 768) return; // 모바일에서는 비활성화
     const item = e.currentTarget;
     const border = item.querySelector('.skills__border-path');
     const num = item.querySelector('.skills__num');
     const totalLength = border.getTotalLength();
 
     gsap.to(border, { strokeDashoffset: totalLength, duration: 0.5, ease: "power2.in" });
-    gsap.to(num, { opacity: 0.5, duration: 0.3, onComplete: () => { num.innerText = "0"; gsap.set(num, { opacity: 1 }); } });
+    gsap.to(num, {
+      opacity: 0.5, duration: 0.3,
+      onComplete: () => { num.innerText = "0"; gsap.set(num, { opacity: 1 }); }
+    });
   };
+
+  const renderSkillItem = (skill, index) => (
+    <div
+      key={`skill-${index}`}
+      className={`skills__item ${skill.isBlack ? 'skills__item--black' : ''}`}
+      ref={el => itemsRef.current[index] = el}
+      onMouseEnter={(e) => onHoverSkill(e, skill.level)}
+      onMouseLeave={onLeaveSkill}
+    >
+      <div className="skills__default">
+        <div className="skills__icon"><img src={`/src/assets/images/main/${skill.icon}`} alt={skill.name} /></div>
+        <p className="skills__name">{skill.name}</p>
+      </div>
+      <div className="skills__hover">
+        <svg className="skills__border" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <rect className="skills__border-path" x="0" y="0" width="100" height="100" />
+        </svg>
+        <p className="skills__name">{skill.name}</p>
+        <div className="skills__num-wrap">
+          <span className="skills__num">0</span><span className="unit">%</span>
+        </div>
+        <p className="skills__desc">{skill.desc}</p>
+      </div>
+    </div>
+  );
 
   return (
     <section className="skills" ref={sectionRef} id='skills'>
       <div className="inner">
-        {/* 타이틀 Ref 연결 */}
         <h2 className="skills__title" ref={titleRef}><span>My</span> skill</h2>
-
         <div className="skills__cont">
-          {/* 첫 번째 줄 */}
           <div className="skills__row row1">
-            {skillsRow1.map((skill, index) => (
-              <div
-                key={`row1-${index}`}
-                className={`skills__item ${skill.isBlack ? 'skills__item--black' : ''}`}
-                ref={el => itemsRef.current[index] = el}
-                onMouseEnter={(e) => onHoverSkill(e, skill.level)}
-                onMouseLeave={onLeaveSkill}
-              >
-                <div className="skills__default">
-                  <div className="skills__icon"><img src={`/src/assets/images/main/${skill.icon}`} alt={skill.name} /></div>
-                  <p className="skills__name">{skill.name}</p>
-                </div>
-                <div className="skills__hover">
-                  <svg className="skills__border" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <rect className="skills__border-path" x="0" y="0" width="100" height="100" />
-                  </svg>
-                  <p className="skills__name">{skill.name}</p>
-                  <div className="skills__num-wrap">
-                    <span className="skills__num">0</span><span className="unit">%</span>
-                  </div>
-                  <p className="skills__desc">{skill.desc}</p>
-                </div>
-              </div>
-            ))}
+            {skillsRow1.map((skill, index) => renderSkillItem(skill, index))}
           </div>
-
-          {/* 두 번째 줄 */}
           <div className="skills__row row2">
-            {skillsRow2.map((skill, index) => (
-              <div
-                key={`row2-${index}`}
-                className={`skills__item ${skill.isBlack ? 'skills__item--black' : ''}`}
-                ref={el => itemsRef.current[skillsRow1.length + index] = el}
-                onMouseEnter={(e) => onHoverSkill(e, skill.level)}
-                onMouseLeave={onLeaveSkill}
-              >
-                <div className="skills__default">
-                  <div className="skills__icon"><img src={`/src/assets/images/main/${skill.icon}`} alt={skill.name} /></div>
-                  <p className="skills__name">{skill.name}</p>
-                </div>
-                <div className="skills__hover">
-                  <svg className="skills__border" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <rect className="skills__border-path" x="0" y="0" width="100" height="100" />
-                  </svg>
-                  <p className="skills__name">{skill.name}</p>
-                  <div className="skills__num-wrap">
-                    <span className="skills__num">0</span><span className="unit">%</span>
-                  </div>
-                  <p className="skills__desc">{skill.desc}</p>
-                </div>
-              </div>
-            ))}
+            {skillsRow2.map((skill, index) => renderSkillItem(skill, skillsRow1.length + index))}
           </div>
         </div>
       </div>

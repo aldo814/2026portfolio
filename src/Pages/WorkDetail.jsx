@@ -19,9 +19,8 @@ const WorkDetail = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
-
   const handleBack = () => {
-    sessionStorage.setItem("scrollY", String(window.scrollY || "0"));
+    sessionStorage.removeItem("fromDetail");
     navigate(-1);
   };
 

@@ -275,10 +275,6 @@ $nav-transition: cubic-bezier(0.76, 0, 0.24, 1);
     overflow: hidden;
   }
  
-  &:hover {
-    border-color: rgba(255, 255, 255, 0.8);
-    background: rgba(255, 255, 255, 0.06);
-  }
  
   // 열린 상태
   &.open,

@@ -1,0 +1,11 @@
+AddType video/mp4 .mp4
+AddType video/webm .webm
+AddType video/ogg .ogv
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # .mp4로 끝나는 요청이 들어오면 MIME 타입을 강제로 비디오로 지정
+    RewriteRule \.(mp4)$ - [T=video/mp4]
+</IfModule>
+
+AddType video/mp4 .mp4

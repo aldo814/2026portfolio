@@ -7,7 +7,7 @@ import { FreeMode } from 'swiper/modules';
 import * as THREE from 'three';
 import 'swiper/css';
 
-import { projects } from '../../../Pages/WorkData'
+import { projects } from '../../../Pages/WorkData';
 import WorkMedia from './WorkMedia';
 
 function Work() {
@@ -20,14 +20,30 @@ function Work() {
   const canvasRef = useRef(null);
   const videoRef = useRef(null);
 
+  // ✅ 배포용 베이스 URL 가져오기
+  const baseUrl = import.meta.env.BASE_URL;
+
   /* ─────────────────────────────────────
-     WebGL (기존 로직 유지)
+     WebGL
   ───────────────────────────────────── */
   useEffect(() => {
+    // ✅ 비디오 엘리먼트와 컨테이너가 확실히 있을 때만 실행
     if (!canvasRef.current || !videoRef.current || !containerRef.current) return;
 
     const container = containerRef.current;
     const video = videoRef.current;
+
+    // ✅ 비디오 강제 재생 설정 (MIME 타입 우회용)
+    video.muted = true;
+    video.play().catch(() => {
+      // 자동 재생 차단 대비: 사용자 상호작용 시 재생되도록 처리
+      const playVideo = () => {
+        video.play();
+        window.removeEventListener('click', playVideo);
+      };
+      window.addEventListener('click', playVideo);
+    });
+
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 10);
     camera.position.z = 1.8;
@@ -39,9 +55,12 @@ function Work() {
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    video.play().catch(() => { });
     const vTex = new THREE.VideoTexture(video);
+    // 비디오 텍스처 품질 설정
+    vTex.minFilter = THREE.LinearFilter;
+    vTex.magFilter = THREE.LinearFilter;
 
+    // Shader 소스 (수정 없음)
     const vertexShader = `
       varying vec2 vUv;
       uniform vec2 uResolution;
@@ -101,6 +120,7 @@ function Work() {
       uniforms.uVideoResolution.value.set(video.videoWidth, video.videoHeight);
     };
 
+    // 인터랙션 로직 (드래그 등)
     const rot = { x: 0, y: 0 };
     const target = { x: 0, y: 0 };
     let isDragging = false;
@@ -202,7 +222,7 @@ function Work() {
   }, []);
 
   /* ─────────────────────────────────────
-     Swiper & Scroll
+     Swiper & Scroll (생략 가능, 기존 유지)
   ───────────────────────────────────── */
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -244,11 +264,12 @@ function Work() {
       </div>
 
       <div className="work__hero" ref={containerRef} style={{ cursor: 'grab' }}>
+        {/* ✅ 비디오 경로 수정 (public 폴더 기준 + png 확장자 유지) */}
         <video
           ref={videoRef}
           autoPlay loop muted playsInline
           style={{ display: 'none' }}
-          src="/src/assets/images/main/work_hero00.mp4"
+          src={`${baseUrl}images/main/work_hero00.png`}
         />
         <canvas ref={canvasRef} id="glCanvas" />
       </div>
@@ -269,8 +290,9 @@ function Work() {
           {projects.slice(0, 4).map((project) => (
             <SwiperSlide key={project.id}>
               <Link to={`/work/${project.id}`} className="work__item-link">
+                {/* ✅ 이미지 경로도 baseUrl 적용 */}
                 <div className="work__img">
-                  <img src={project.thumb} alt={project.titlekr} />
+                  <img src={`${project.thumb}`} alt={project.titlekr} />
                 </div>
                 <div className="work__info">
                   <span className="work__id">PROJECT {project.id.split('-')[1]}</span>
@@ -283,11 +305,15 @@ function Work() {
       </div>
 
       <div className="work__media">
-        <WorkMedia></WorkMedia>
+        <WorkMedia />
       </div>
 
-      {/* 버튼 클릭 시 AllWork 페이지로 이동 */}
-      <Link to="/AllWork" className="work__button" ref={buttonRef}>
+      <Link
+        to="/AllWork"
+        className="work__button"
+        ref={buttonRef}
+        onClick={() => sessionStorage.removeItem("scrollY")}
+      >
         <span>View all projects</span>
       </Link>
     </section>

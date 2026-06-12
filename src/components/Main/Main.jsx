@@ -8,11 +8,13 @@ import '../../style/main.scss';
 function Main() {
   return (
     <>
-      <Hero />
-      <About />
-      <Skills />
-      <Portfolio />
-      <Contact />
+      <div className="main">
+        <Hero />
+        <About />
+        <Skills />
+        <Portfolio />
+        <Contact />
+      </div>
     </>
   );
 }
