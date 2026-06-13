@@ -3,7 +3,7 @@ export const projects = [
     id: 'chart-lab',
     type:'Web Site',
     category: 'UI Development',
-    categorykr:'프론트앤드',
+    categorykr:'프론트엔드',
     date:'2026',
     title: 'Chart Lab',
     titlekr:'차트연구소',
@@ -90,7 +90,7 @@ export const projects = [
     id: 'suhwoo-technology',
     type:'Web Site',
     category: 'UI Development',
-    categorykr:'퍼블이싱',
+    categorykr:'퍼블리싱',
     date:'2026',
     title: 'suhwoo Technology',
     titlekr:'서우 테크놀로지',
@@ -107,7 +107,7 @@ export const projects = [
     view:'http://suhwoo.nosboard.kr/'
   },
   {
-    id: 'gangwon-job',
+    id: 'gangwon-job-experience',
     type:'Web Site',
     category: 'UI Development',
     categorykr:'퍼블리싱',
@@ -170,7 +170,7 @@ export const projects = [
     view:'https://www.gwsgc.kr/portal/online_education'
   },
   {
-    id: 'gangwon-job',
+    id: 'gangwon-job-info',
     type:'Web Site',
     category: 'UI Development',
     categorykr:'퍼블리싱',

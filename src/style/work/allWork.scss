@@ -49,6 +49,7 @@
     margin-bottom: 3.125rem;
     & ul{
       display: flex;
+      flex-wrap: wrap;
       gap: .9375rem;
 
       @include mobile{
@@ -125,10 +126,24 @@
             padding: 1.875rem 0;
           }
 
-          .allWork__category{
-            font-size: .9375rem;
-            color: #555;
-            letter-spacing: -0.0187rem;
+          .allWork__stack{
+            display: flex;
+            flex-wrap: wrap;
+            gap: .5rem;
+
+            li{
+              width: auto;
+              padding: .375rem .625rem;
+              border: 1px solid #d8d8d8;
+              border-radius: 999px;
+              color: #555;
+              font-size: .8125rem;
+              line-height: 1;
+              letter-spacing: 0;
+              cursor: default;
+              transform-style: flat;
+              will-change: auto;
+            }
           }
           .allWork__name{
             font-size: 1.25rem;

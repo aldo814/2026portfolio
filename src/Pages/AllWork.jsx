@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useRef, useMemo } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -9,13 +9,10 @@ import '../style/work.scss';
 gsap.registerPlugin(ScrollTrigger);
 
 const AllWork = () => {
-  const [activeTab, setActiveTab] = useState('All');
   const navigate = useNavigate();
-  const categories = ['All', '디자인', '퍼블리싱'];
   const gridRef = useRef(null);
 
   const isBackAction = useMemo(() => !!sessionStorage.getItem("scrollY"), []);
-  const isTabChange = useRef(false);
   const savedScrollY = useRef(Number(sessionStorage.getItem("scrollY") || 0));
 
   // 스크롤 복원
@@ -37,25 +34,13 @@ const AllWork = () => {
     navigate(`/work/${id}`);
   };
 
-  const handleTabChange = (cat) => {
-    isTabChange.current = true;
-    setActiveTab(cat);
-  };
-
-  const filteredProjects = activeTab === 'All'
-    ? projects
-    : projects.filter(item => item.categorykr === activeTab);
-
   useLayoutEffect(() => {
-    const tabChange = isTabChange.current;
-    isTabChange.current = false;
-
     const ctx = gsap.context(() => {
       const workItems = gsap.utils.toArray(".allWork__item");
 
       // 뒤로가기 or 탭변경 시 애니메이션 없이 즉시 보여주기
-      if (isBackAction || tabChange) {
-        gsap.set(".allWork__subtitle, .allWork__title, .allWork__tab, .allWork__item", {
+      if (isBackAction) {
+        gsap.set(".allWork__subtitle, .allWork__title, .allWork__item", {
           y: 0, opacity: 1, filter: "blur(0px)", x: 0
         });
         workItems.forEach(item => {
@@ -77,7 +62,7 @@ const AllWork = () => {
           item.addEventListener("mouseleave", onMouseLeave);
         });
 
-        if (filteredProjects.length > 1 && window.innerWidth > 768) {
+        if (projects.length > 1 && window.innerWidth > 768) {
           gsap.to(".allWork__item:nth-child(2n)", {
             y: -60,
             scrollTrigger: { trigger: ".allWork__grid", start: "top bottom", end: "bottom top", scrub: 1.2 }
@@ -89,14 +74,12 @@ const AllWork = () => {
       /* 신규 진입 시에만 실행되는 애니메이션 */
       gsap.set(".allWork__subtitle", { y: 30, opacity: 0 });
       gsap.set(".allWork__title", { y: 80, opacity: 0, filter: "blur(15px)" });
-      gsap.set(".allWork__tab", { x: -100, opacity: 0 });
       gsap.set(".allWork__item", { y: 50, opacity: 0 });
 
       const mainTl = gsap.timeline();
       mainTl
         .to(".allWork__subtitle", { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" })
         .to(".allWork__title", { y: 0, opacity: 1, filter: "blur(0px)", duration: 1, ease: "power4.out" }, "-=0.3")
-        .to(".allWork__tab", { x: 0, opacity: 1, duration: 0.8, ease: "back.out(1.5)" }, "-=0.5")
         .to(".allWork__item", {
           y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: "power4.out",
           onComplete: () => ScrollTrigger.refresh()
@@ -125,7 +108,7 @@ const AllWork = () => {
         item.addEventListener("mouseleave", onMouseLeave);
       });
 
-      if (filteredProjects.length > 1 && window.innerWidth > 768) {
+      if (projects.length > 1 && window.innerWidth > 768) {
         gsap.to(".allWork__item:nth-child(2n)", {
           y: -60,
           scrollTrigger: { trigger: ".allWork__grid", start: "top bottom", end: "bottom top", scrub: 1.2 }
@@ -134,7 +117,7 @@ const AllWork = () => {
     }, gridRef);
 
     return () => ctx.revert();
-  }, [filteredProjects, isBackAction]);
+  }, [isBackAction]);
 
   return (
     <div className="allWork" ref={gridRef}>
@@ -147,29 +130,19 @@ const AllWork = () => {
       </section>
 
       <div className="inner">
-        <section className="allWork__tab">
-          <ul className="allWork__tab-list">
-            {categories.map((cat) => (
-              <li
-                key={cat}
-                className={`allWork__tab-item ${activeTab === cat ? 'allWork__tab-item--active' : ''}`}
-                onClick={() => handleTabChange(cat)}
-              >
-                {cat}
-              </li>
-            ))}
-          </ul>
-        </section>
-
         <section className="allWork__list">
           <ul className="allWork__grid">
-            {filteredProjects.map((project) => (
+            {projects.map((project) => (
               <li className="allWork__item" key={project.id} onClick={() => goDetail(project.id)}>
                 <div className="allWork__thumb">
                   <img src={project.thumb} alt={project.title} />
                 </div>
                 <div className="allWork__info">
-                  <span className="allWork__category">{project.categorykr?.toUpperCase()}</span>
+                  <ul className="allWork__stack">
+                    {project.stack?.map((stack) => (
+                      <li key={stack}>{stack}</li>
+                    ))}
+                  </ul>
                   <h3 className="allWork__name">{project.title}</h3>
                 </div>
               </li>
